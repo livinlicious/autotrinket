@@ -1,6 +1,6 @@
 # AutoTrinket
 
-**AutoTrinket** is a powerful, priority-based trinket manager for World of Warcraft Classic. It automatically equips your best available trinkets based on a single unified priority list, ensuring you always have your most powerful cooldowns ready to use.
+**AutoTrinket** is a powerful, priority-based trinket manager for World of Warcraft 1.12+. It automatically equips your best available trinkets based on a single unified priority list, ensuring you always have your most powerful cooldowns ready to use.
 
 ## Key Features
 
@@ -78,4 +78,5 @@ All configuration is done via the visual UI, and very simple chat commands:
 
 ---
 *Created for efficient raiding and seamless cooldown rotations.*
+
 

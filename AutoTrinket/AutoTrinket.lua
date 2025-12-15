@@ -413,6 +413,7 @@ function AutoTrinket_RefreshPriorityList()
         if item.removeButton then item.removeButton:Hide() end
         if item.upButton then item.upButton:Hide() end
         if item.downButton then item.downButton:Hide() end
+        if item.checkButton then item.checkButton:Hide() end
     end
     
     local yOffset = 8
@@ -422,14 +423,28 @@ function AutoTrinket_RefreshPriorityList()
             PriorityListItems[i] = {}
         end
         local row = PriorityListItems[i]
+
+        -- CheckBox (Use for Rotation)
+        if not row.checkButton then
+            row.checkButton = CreateFrame("CheckButton", nil, AutoTrinketConfigFramePriorityListFrame, "UICheckButtonTemplate")
+            row.checkButton:SetWidth(20)
+            row.checkButton:SetHeight(20)
+            row.checkButton:SetScript("OnClick", function()
+                AutoTrinketDB.trinkets[this.index].useForRotation = this:GetChecked()
+            end)
+        end
+        row.checkButton:SetPoint("TOPLEFT", 10, -yOffset + 4)
+        row.checkButton.index = i
+        row.checkButton:SetChecked(trinket.useForRotation == nil or trinket.useForRotation)
+        row.checkButton:Show()
         
-        -- Text
+        -- Text (Shifted Right to x=35)
         if not row.fontString then
             row.fontString = AutoTrinketConfigFramePriorityListFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
             row.fontString:SetJustifyH("LEFT")
-            row.fontString:SetWidth(150)
+            row.fontString:SetWidth(125)
         end
-        row.fontString:SetPoint("TOPLEFT", 10, -yOffset)
+        row.fontString:SetPoint("TOPLEFT", 35, -yOffset)
         row.fontString:SetText(i .. ". " .. trinket.name)
         row.fontString:Show()
         
@@ -500,7 +515,7 @@ function AutoTrinket_RefreshPriorityList()
         row.upButton.index = i 
         row.upButton:Show()
         
-        yOffset = yOffset + 20
+        yOffset = yOffset + 24 -- Increased row height slightly to accommodate checkbox
     end
 end
 
@@ -721,6 +736,52 @@ function AutoTrinket_Default2DropDown_Initialize()
 end
 
 ------------------------------------------------------
+-- AUTO USE LOGIC
+------------------------------------------------------
+
+function AutoTrinket_Use()
+    local topName = GetEquippedTrinketName(TRINKET_SLOT_TOP)
+    local bottomName = GetEquippedTrinketName(TRINKET_SLOT_BOTTOM)
+    
+    local topInfo = nil
+    local bottomInfo = nil
+    
+    -- Find list info for equipped items
+    for i, t in ipairs(AutoTrinketDB.trinkets) do
+        local use = (t.useForRotation == nil) or t.useForRotation
+        if IsSameTrinket(t.name, topName) then
+            topInfo = { index = i, use = use, slot = TRINKET_SLOT_TOP }
+        elseif IsSameTrinket(t.name, bottomName) then
+             bottomInfo = { index = i, use = use, slot = TRINKET_SLOT_BOTTOM }
+        end
+    end
+    
+    local best = nil
+    
+    -- Check Top
+    if topInfo and topInfo.use then
+        local cd = GetInventoryItemCooldown("player", TRINKET_SLOT_TOP)
+        if cd == 0 then
+            best = topInfo
+        end
+    end
+    
+    -- Check Bottom
+    if bottomInfo and bottomInfo.use then
+        local cd = GetInventoryItemCooldown("player", TRINKET_SLOT_BOTTOM)
+        if cd == 0 then
+            if not best or bottomInfo.index < best.index then
+                best = bottomInfo
+            end
+        end
+    end
+    
+    if best then
+        UseInventoryItem(best.slot)
+    end
+end
+
+------------------------------------------------------
 -- COMMANDS
 ------------------------------------------------------
 
@@ -739,7 +800,7 @@ function AutoTrinket_AddTrinket(name)
         end
     end
 
-    table.insert(AutoTrinketDB.trinkets, {name = name})
+    table.insert(AutoTrinketDB.trinkets, {name = name, useForRotation = true})
     Print("Added: " .. name)
     return true
 end
@@ -756,19 +817,6 @@ function AutoTrinket_AddAllTrinkets()
     AutoTrinket_RefreshPriorityList()
 end
 
-function AutoTrinket_List()
-    if not AutoTrinketDB.trinkets or table.getn(AutoTrinketDB.trinkets) == 0 then
-        Print("List is empty")
-        return
-    end
-    Print("Priority List:")
-    for i, trinket in ipairs(AutoTrinketDB.trinkets) do
-        local cd = GetTrinketCooldown(trinket.name)
-        local cdText = cd == 0 and "|cff00ff00READY|r" or (cd > 1000 and "|cffff0000NOT FOUND|r" or "|cffffff00" .. math.floor(cd) .. "s|r")
-        Print("  " .. i .. ". " .. trinket.name .. " - " .. cdText)
-    end
-end
-
 SLASH_AUTOTRINKET1 = "/autotrinket"
 SLASH_AUTOTRINKET2 = "/at"
 SlashCmdList["AUTOTRINKET"] = function(msg)
@@ -781,7 +829,10 @@ SlashCmdList["AUTOTRINKET"] = function(msg)
     elseif cmd == "help" then
         Print("Commands:")
         Print("  /autotrinket config - Open UI")
+        Print("  /autotrinket use - Use top priority equipped trinket")
         Print("  /autotrinket - Toggle Addon On/Off")
+    elseif cmd == "use" then
+        AutoTrinket_Use()
     else
         AutoTrinket_Toggle()
         if AutoTrinketDB.enabled then

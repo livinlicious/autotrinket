@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: AutoTrinket
+## Notes: Priority-based automatic trinket swapping. Equips highest priority trinket that's off cooldown.
+## Author: Livin
+## Version: 1.0.0
+## SavedVariables: AutoTrinketDB
+AutoTrinket.lua
+AutoTrinketConfig.xml

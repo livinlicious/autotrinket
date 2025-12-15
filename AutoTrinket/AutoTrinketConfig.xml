@@ -1,0 +1,294 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+
+    <!-- Main Config Frame -->
+    <Frame name="AutoTrinketConfigFrame" parent="UIParent" hidden="true" frameStrata="DIALOG" toplevel="true" enableMouse="true" movable="true">
+        <Size>
+            <AbsDimension x="500" y="420"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="11" right="12" top="12" bottom="11"/>
+            </BackgroundInsets>
+            <TileSize>
+                <AbsValue val="32"/>
+            </TileSize>
+            <EdgeSize>
+                <AbsValue val="32"/>
+            </EdgeSize>
+        </Backdrop>
+
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parentTitle" inherits="GameFontNormalLarge" text="AutoTrinket Configuration">
+                    <Anchors>
+                        <Anchor point="TOP">
+                            <Offset>
+                                <AbsDimension x="0" y="-16"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <!-- Left Column Header - Shifted X to 25 to align with visual box edge -->
+                <FontString name="$parentPriorityLabel" inherits="GameFontNormalSmall" text="Priority List:">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="25" y="-50"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <!-- Right Column Headers -->
+                <FontString name="$parentDefaultsLabel" inherits="GameFontNormalSmall" text="Default Trinkets:">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="300" y="-50"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentDefault1Label" inherits="GameFontNormalSmall" text="First Fallback:">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="300" y="-80"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                 <FontString name="$parentDefault2Label" inherits="GameFontNormalSmall" text="Second Fallback:">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="300" y="-140"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentStatusLabel" inherits="GameFontNormalSmall" text="Status:">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="300" y="-330"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+
+                <FontString name="$parentStatusValue" inherits="GameFontHighlight" text="Disabled">
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="350" y="-330"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+
+        <Frames>
+            <!-- Priority List Container -->
+            <Frame name="$parentPriorityListFrame">
+                <Size>
+                    <AbsDimension x="260" y="300"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="20" y="-75"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+                    <EdgeSize><AbsValue val="16"/></EdgeSize>
+                    <TileSize><AbsValue val="16"/></TileSize>
+                    <BackgroundInsets><AbsInset left="4" right="4" top="4" bottom="4"/></BackgroundInsets>
+                    <Color r="0" g="0" b="0" a="0.8"/>
+                </Backdrop>
+            </Frame>
+
+            <!-- Dropdowns - Fixed Left Alignment via Explicit Text Anchoring -->
+            <Frame name="AutoTrinketDefault1DropDown" inherits="UIDropDownMenuTemplate">
+                 <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="275" y="-100"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                 <Scripts>
+                    <OnLoad>
+                        UIDropDownMenu_Initialize(this, AutoTrinket_Default1DropDown_Initialize);
+                        UIDropDownMenu_SetWidth(150, AutoTrinketDefault1DropDown);
+                        local text = getglobal(this:GetName().."Text");
+                        if text then
+                            text:SetJustifyH("LEFT");
+                            text:ClearAllPoints();
+                            text:SetPoint("LEFT", this, "LEFT", 25, 2);
+                            text:SetPoint("RIGHT", this, "RIGHT", -25, 2);
+                        end
+                    </OnLoad>
+                 </Scripts>
+            </Frame>
+
+             <Frame name="AutoTrinketDefault2DropDown" inherits="UIDropDownMenuTemplate">
+                 <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="275" y="-160"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                 <Scripts>
+                    <OnLoad>
+                        UIDropDownMenu_Initialize(this, AutoTrinket_Default2DropDown_Initialize);
+                        UIDropDownMenu_SetWidth(150, AutoTrinketDefault2DropDown);
+                        local text = getglobal(this:GetName().."Text");
+                        if text then
+                            text:SetJustifyH("LEFT");
+                            text:ClearAllPoints();
+                            text:SetPoint("LEFT", this, "LEFT", 25, 2);
+                            text:SetPoint("RIGHT", this, "RIGHT", -25, 2);
+                        end
+                    </OnLoad>
+                 </Scripts>
+            </Frame>
+
+            <!-- Equipped Items -->
+            <Frame name="$parentEquippedFrame">
+                <Size>
+                    <AbsDimension x="200" y="100"/>
+                </Size>
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset>
+                            <AbsDimension x="300" y="-210"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentEquippedTitle" inherits="GameFontNormalSmall" text="Currently Equipped:">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentTopLabel" inherits="GameFontNormalSmall" text="Top (13):">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-20"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentTopValue" inherits="GameFontHighlightSmall" text="(empty)">
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="$parentTopLabel" relativePoint="RIGHT">
+                                    <Offset>
+                                        <AbsDimension x="5" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentBottomLabel" inherits="GameFontNormalSmall" text="Bottom (14):">
+                            <Anchors>
+                                <Anchor point="TOPLEFT">
+                                    <Offset>
+                                        <AbsDimension x="0" y="-40"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentBottomValue" inherits="GameFontHighlightSmall" text="(empty)">
+                            <Anchors>
+                                <Anchor point="LEFT" relativeTo="$parentBottomLabel" relativePoint="RIGHT">
+                                    <Offset>
+                                        <AbsDimension x="5" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <!-- LEFT COLUMN BUTTONS -->
+            <Button name="$parentAddButton" inherits="GameMenuButtonTemplate" text="Add All">
+                <Size><AbsDimension x="80" y="22"/></Size>
+                <Anchors><Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="20" y="20"/></Offset></Anchor></Anchors>
+                <Scripts><OnClick>AutoTrinket_AddAllTrinkets();</OnClick></Scripts>
+            </Button>
+
+             <Button name="$parentClearButton" inherits="GameMenuButtonTemplate" text="Clear">
+                <Size><AbsDimension x="70" y="22"/></Size>
+                <Anchors><Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="110" y="20"/></Offset></Anchor></Anchors>
+                <Scripts><OnClick>AutoTrinket_ClearList();</OnClick></Scripts>
+            </Button>
+
+             <Button name="$parentLearnButton" inherits="GameMenuButtonTemplate" text="Learn Buffs">
+                <Size><AbsDimension x="90" y="22"/></Size>
+                <Anchors><Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="190" y="20"/></Offset></Anchor></Anchors>
+                <Scripts>
+                    <OnClick>
+                        AutoTrinket_StartLearning();
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <!-- RIGHT COLUMN BUTTONS -->
+            <!-- Enable: Moved RIGHT to 310. Width 80 -> Ends 390. Close starts at 400. 10px Gap. -->
+            <Button name="$parentEnableButton" inherits="GameMenuButtonTemplate" text="Enable">
+                <Size><AbsDimension x="80" y="22"/></Size>
+                <Anchors><Anchor point="BOTTOMLEFT"><Offset><AbsDimension x="310" y="20"/></Offset></Anchor></Anchors>
+                <Scripts>
+                    <OnClick>
+                        AutoTrinket_Toggle();
+                        AutoTrinket_RefreshUI();
+                    </OnClick>
+                </Scripts>
+            </Button>
+
+            <Button name="$parentCloseButton" inherits="GameMenuButtonTemplate" text="Close">
+                <Size><AbsDimension x="80" y="22"/></Size>
+                <Anchors><Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-20" y="20"/></Offset></Anchor></Anchors>
+                <Scripts><OnClick>AutoTrinketConfigFrame:Hide();</OnClick></Scripts>
+            </Button>
+        </Frames>
+
+        <Scripts>
+            <OnLoad>AutoTrinket_ConfigOnLoad();</OnLoad>
+            <OnShow>AutoTrinket_RefreshUI();</OnShow>
+            <OnUpdate>
+                AutoTrinket_ConfigOnUpdate();
+                if AutoTrinket_IsLearning and AutoTrinket_IsLearning() then
+                     AutoTrinketConfigFrameStatusValue:SetText("|cffffcc00Learning...|r");
+                elseif AutoTrinketDB and AutoTrinketDB.enabled then
+                    AutoTrinketConfigFrameStatusValue:SetText("|cff00ff00Enabled|r");
+                else
+                    AutoTrinketConfigFrameStatusValue:SetText("|cffff0000Disabled|r");
+                end
+            </OnUpdate>
+            <OnMouseDown>this:StartMoving();</OnMouseDown>
+            <OnMouseUp>this:StopMovingOrSizing();</OnMouseUp>
+        </Scripts>
+    </Frame>
+</Ui>

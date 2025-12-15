@@ -46,7 +46,7 @@ To ensure the addon doesn't unequip a trinket while you are still enjoying its b
 
 *Note: You only need to do this once per trinket. The addon saves this data permanently.*
 
-![Learn Buffs Process](lernbuff.png)
+![Learn Buffs Process](learnbuff.png)
 
 ### 5. Enable
 Click **Enable** in the config window or type:
@@ -78,3 +78,4 @@ All configuration is done via the visual UI, and very simple chat commands:
 
 ---
 *Created for efficient raiding and seamless cooldown rotations.*
+
